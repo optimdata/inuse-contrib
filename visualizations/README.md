@@ -32,8 +32,8 @@ To configure a visualization:
 
 |   |   |  |
 | --- | --- | --- |                                     
-| ![gauge1](gauge1.png) |  |  | 
-| [A simple gauge](./gauge1.json) |  |  |
+| ![gauge1](gauge1.png) | ![fft1](fft1.png) |  | 
+| [Simple gauge](./gauge1.json) | [Spectral representation](./fft1.json) |  |
 
 
 # Contributing
