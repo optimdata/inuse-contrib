@@ -1,0 +1,151 @@
+/* 
+1. Choose the name of the associated model
+    - You have to replace 'model_name' by the index of your model
+2. Choose the input (quantitative) variable (denominator)
+    - Replace 'variable1' by the variable you want to represent. It is an absolute variable (unit produced)
+3. Choose the input (quantitative) variable (numerator)
+    - Replace 'variable2' by the variable you wish to represent. It is a relative variable (successful unit among the produced units)
+4. Define the name of the legend
+    - You can choose a title for the legend by replacing Variable_color with the name you want.
+5. Note: Variable 2 must always be greater than variable 1 as it is a ratio.
+6. Note 2: This Gauge represents a pourcentage but it's possible to represent something other than a ratio.
+*/
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "background": "transparent",
+    "view": {
+        "fill": "transparent",
+        "stroke": "transparent"
+    },
+    "data": {
+        "url": {
+            "%context%": true,
+            "%timefield%": "ts_beg",
+            "index": "model_name",
+            "body": {
+                "aggs": {
+                    "agg1": {
+                        "sum": {
+                            "field": "variable1"
+                        }
+                    },
+                    "agg2": {
+                        "sum": {
+                            "field": "variable2"
+                        }
+                    }
+                },
+                "from": 0,
+                "size": 0
+            }
+        },
+        "format": {
+            "property": "aggregations"
+        }
+    },
+    "transform": [
+        {
+            "calculate": "datum.agg2.value / datum.agg1.value",
+            "as": "agg3"
+        },
+        {
+            "calculate": "-3*PI/5",
+            "as": "thetastart"
+        },
+        {
+            "calculate": "datum.thetastart - 2*datum.agg3*datum.thetastart",
+            "as": "thetastop"
+        },
+        {
+            "calculate": "min(width, height)/2",
+            "as": "radi"
+        }
+    ],
+    "layer": [
+        {
+            "mark": {
+                "type": "arc",
+                "radius": {
+                    "expr": "datum.radi"
+                },
+                "radius2": {
+                    "expr": "datum.radi*0.9"
+                },
+                "theta": {
+                    "expr": "-3*PI/5"
+                },
+                "theta2": {
+                    "expr": "3*PI/5"
+                }
+            },
+            "encoding": {
+                "color": {
+                    "type": "quantitative",
+                    "scale": {
+                        "domain": [
+                            0,
+                            1
+                        ]
+                    },
+                    "value": "black"
+                }
+            }
+        },
+        {
+            "mark": {
+                "type": "arc",
+                "radius": {
+                    "expr": "datum.radi*1.05"
+                },
+                "radius2": {
+                    "expr": "datum.radi*0.85"
+                },
+                "theta": {
+                    "expr": "datum.thetastart"
+                },
+                "theta2": {
+                    "expr": "datum.thetastop"
+                }
+            },
+            "encoding": {
+                "color": {
+                    "field": "agg3",
+                    "type": "quantitative",
+                    "scale": {
+                        "type": "pow",
+                        "exponent": 2,
+                        "domain": [
+                            0,
+                            1
+                        ],
+                        "scheme": "Variable_color"
+                    },
+                    "legend": false
+                },
+                "tooltip": [
+                    {
+                        "field": "agg3",
+                        "title": "Agg3",
+                        "format": ".1~%"
+                    }
+                ]
+            }
+        },
+        {
+            "mark": {
+                "type": "text",
+                "fontSize": 20,
+                "font": " Verdana"
+            },
+            "encoding": {
+                "text": {
+                    "field": "agg3",
+                    "format": ".1~%"
+                },
+                "color": {
+                    "value": "black"
+                }
+            }
+        }
+    ]
+}
