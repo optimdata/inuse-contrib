@@ -1,0 +1,151 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": {
+      "%context%": true,
+      "%timefield%": "ts_beg",
+      "index": "model_fft",
+      "body": {
+        "aggs": {
+          "f": {
+            "filter": {
+              "nested": {
+                "path": "fft_property",
+                "query": {
+                  "exists": {
+                    "field": "fft_property"
+                  }
+                }
+              }
+            },
+            "aggs": {
+              "time_buckets": {
+                "top_hits": {
+                  "sort": [
+                    {"ts_beg": {"order": "desc"}}
+                  ],
+                  "_source": {
+                    "includes": [
+                      "ts_beg",
+                      "fft_property"
+                    ]
+                  },
+                  "size": 1
+                }
+              }
+            }
+          }
+        },
+        "size": 0
+      }
+    },
+    "format": {
+      "property": "aggregations.f.time_buckets.hits.hits"
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum._source.fft_property.spectrum",
+      "as": "hits"
+    },
+    {"flatten": ["hits"], "as": ["spectrum"]},
+    {
+      "calculate": "datum.spectrum.magnitude",
+      "as": "magnitude"
+    },
+    {
+      "calculate": "datum.spectrum.frequency",
+      "as": "frequency"
+    },
+    {
+      "window": [{"op": "rank", "as": "rank"}],
+      "sort": [
+        {"field": "frequency", "order": "ascending"}
+      ]
+    },
+    {
+      "joinaggregate": [
+        {"op": "max", "field": "rank", "as": "maxrank"}
+      ]
+    },
+    {
+      "calculate": "2*datum.spectrum.magnitude/(2*datum.maxrank-1)",
+      "as": "magnitude"
+    },
+    {"filter": "datum.frequency >0"}
+  ],
+  "encoding": {
+    "x": {
+      "field": "frequency",
+      "title": "Frequency (Hz)",
+      "type": "quantitative",
+      "scale": {"domainMin": 0}
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "width": 3,
+        "color": "darkorange"
+      },
+      "encoding": {
+        "y": {
+          "field": "magnitude",
+          "title": "Amplitude",
+          "type": "quantitative",
+          "scale": {"type": "log"}
+        }
+      },
+      "params": [
+        {
+          "name": "grid",
+          "select": {
+            "type": "interval",
+            "encodings": ["x"]
+          },
+          "bind": "scales"
+        }
+      ]
+    },
+    {
+      "mark": {"type": "rule"},
+      "encoding": {
+        "opacity": {
+          "condition": {
+            "value": 1,
+            "param": "hover",
+            "empty": false
+          },
+          "value": 0
+        },
+        "tooltip": [
+          {
+            "field": "frequency",
+            "type": "quantitative",
+            "format": ".5f",
+            "title": "Frequency (Hz)"
+          },
+          {
+            "field": "magnitude",
+            "type": "quantitative",
+            "format": ".4f",
+            "title": "Amplitude"
+          }
+        ]
+      },
+      "params": [
+        {
+          "name": "hover",
+          "select": {
+            "type": "point",
+            "fields": ["frequency"],
+            "nearest": true,
+            "on": "mouseover",
+            "clear": "mouseout"
+          }
+        }
+      ]
+    }
+  ]
+}
