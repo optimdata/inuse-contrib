@@ -2,11 +2,11 @@ This repository contains example [Vega](https://vega.github.io/vega/) visualizat
 
 To configure a visualization:
 1. Download the relevant JSON file. 
-2. Edit the file to set the `index` (model) from which to retrieve the properties values.
+2. Edit the file and replace `model_name` by the name of the model from which to retrieve the properties values.
   
         // Which index to search
-        index: INSERT INDEX (MODEL) NAME HERE
- 3. Set the various `field` variables to the relevant model properties. Look for `INSERT VARx PROPERTY HERE` tags.
+        index: "model_name"
+ 3. Set the various `field` variables to the relevant model properties. Look for `variable<x>` references.
  
        ```
        
@@ -14,12 +14,12 @@ To configure a visualization:
             time_buckets: {
               sum: {
               // Target 
-                field: INSERT VAR1 PROPERTY HERE
+                field: "variable1"
               }
             },
             time: {
               sum: {
-                field: INSERT VAR2 PROPERTY HERE
+                field: "variable2"
               }
             }
           } 
@@ -30,16 +30,16 @@ To configure a visualization:
 
 # Gallery
 
-|   |   |
-| --- | --- |                                     
-| ![FFT visualization](visualization.png) | ![FFT visualization](visualization.png) |
-| [FFT visualization](./ftt_spectrum.json) | [FFT visualization](./ftt_spectrum.json) |
+|   |   |  |
+| --- | --- | --- |                                     
+| ![gauge1](gauge1.png) |  |  | 
+| [A simple gauge](./gauge1.json) |  |  |
 
 
 # Contributing
 
 To add a visualization:
-1. Edit the JSON and tag the required `field` variables as described above.
+1. Edit your original JSON and rename the required `index` and `field` elements as described above.
 2. Comment the various configuration sections. Be liberal with comments!
 3. Create a visualization snipet for the gallery.
 4. Edit the Gallery section of this file.
