@@ -27,10 +27,21 @@ To configure a visualization:
        
   4. Add a Vega element in the target synoptic or dashboard.
   5. Copy and paste the file content into the definition text box of the element.
+
 # Gallery
 
 |   |   |
 | --- | --- |                                     
 | ![FFT visualization](visualization.png) | ![FFT visualization](visualization.png) |
 | [FFT visualization](./ftt_spectrum.json) | [FFT visualization](./ftt_spectrum.json) |
+
+
+# Contributing
+
+To add a visualization:
+1. Edit the JSON and tag the required `field` variables as described above.
+2. Comment the various configuration sections. Be liberal with comments!
+3. Create a visualization snipet for the gallery.
+4. Edit the Gallery section of this file.
+5. Commit
 
