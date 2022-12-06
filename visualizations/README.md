@@ -38,6 +38,13 @@ To configure a visualization:
 
 # Contributing
 
+General process to contibute a public Github repository
+1. Fork this repository
+2. Push your contribution to the forked repo
+3. Create a pull request onto the origin repo
+
+Useful details can be found [here](https://akrabat.com/the-beginners-guide-to-contributing-to-a-github-project/).
+
 To add a visualization:
 1. Edit your original JSON and rename the required `index` and `field` elements as described above.
 2. Comment the various configuration sections. Be liberal with comments!
