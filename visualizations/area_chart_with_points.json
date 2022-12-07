@@ -1,0 +1,134 @@
+/* 
+1. Choose the name of the associated model
+    - You have to replace 'model_name' by the index of your model
+2. Choose the duration properties :
+    - Replace 'duration_state_execute' by the duration during production.
+	- Replace 'duration' by the duration during opening hours
+*/
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": "transparent",
+  "view": {
+    "fill": "transparent",
+    "stroke": "transparent"
+  },
+  "data": {
+    "url": {
+      "%context%": true,
+      "%timefield%": "ts_beg",
+      "%translate_data%": true,
+      "index": "model_name",
+      "body": {
+        "aggs": {
+          "time": {
+            "date_histogram": {
+              "field": "ts_beg",
+              "interval": "1d"
+            },
+            "aggs": {
+              "total_duration": {
+                "sum": {"field": "duration"}
+              },
+              "duration_producing": {
+                "sum": {
+                  "field": "duration_state_execute"
+                }
+              }
+            }
+          }
+        },
+        "from": 0,
+        "size": 0
+      }
+    },
+    "format": {
+      "property": "aggregations.time.buckets"
+    }
+  },
+  "transform": [
+	{
+      "calculate": "datum.key",
+      "as": "date"
+    },
+    {
+      "calculate": "datum.duration_producing.value / datum.total_duration.value",
+      "as": "availability"
+    },
+    {
+      "calculate": "momentFormat(datum.date, 'lll')",
+      "as": "date_tooltip"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "area",
+        "line": {"color": "#008B72"},
+        "color": {
+          "x1": 1,
+          "y1": 1,
+          "x2": 1,
+          "y2": 0,
+          "gradient": "linear",
+          "stops": [
+            {"offset": 0, "color": "white"},
+            {"offset": 1, "color": "#008B72"}
+          ]
+        }
+      },
+      "encoding": {
+        "x": {
+          "title": false,
+          "field": "date",
+          "type": "temporal",
+          "timeUnit": "utcyearmonthdate",
+          "axis": {
+            "labelAngle": 0,
+            "labelExpr": "momentFormat(datum.value, 'll')",
+            "labelOverlap": true,
+            "grid": false
+          }
+        },
+        "y": {
+          "field": "availability",
+          "type": "quantitative",
+          "axis": {"format": ".1~%"},
+          "title": "Availability",
+          "scale": {"domainMax": 1}
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "fill": "#008B72"
+      },
+      "encoding": {
+        "x": {
+          "title": false,
+          "field": "date",
+          "type": "temporal",
+          "timeUnit": "utcyearmonthdate"
+        },
+        "y": {
+          "field": "availability",
+          "type": "quantitative",
+          "title": "Availability",
+          "scale": {"domainMax": 1}
+        },
+        "tooltip": [
+          {
+            "field": "availability",
+            "title": "Availability ",
+            "format": ".1~%"
+          },
+          {
+            "field": "date_tooltip",
+            "type": "nominal",
+            "title": "Date"
+          }
+        ]
+      }
+    }
+  ]
+}

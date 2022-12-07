@@ -1,0 +1,82 @@
+/* 
+1. Choose the name of the associated model
+    - You have to replace 'model_name' by the index of your model
+2. Choose your mopdel properties :
+    - Replace 'energy_in_period' by the energy per period property.
+	- Replace 'state' by the machine state property.
+3. Add all the strings prefixed by 'IUTRANSLATE' (title and tooltip translations) in Content/Translations menu
+*/
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": "transparent",
+  "view": {
+    "fill": "transparent",
+    "stroke": "transparent"
+  },
+  "data": {
+    "url": {
+      "%context%": true,
+      "%timefield%": "ts_beg",
+      "%translate_data%": true,
+      "index": "model_name",
+      "body": {
+        "aggs": {
+          "state": {
+            "terms": {
+              "field": "state",
+              "size": 1000
+            },
+            "aggs": {
+              "energy": {
+                "sum": {
+                  "field": "energy_in_period"
+                }
+              }
+            }
+          }
+        },
+        "from": 0,
+        "size": 0
+      }
+    },
+    "format": {
+      "property": "aggregations.state.buckets"
+    }
+  },
+  "transform": [
+	{
+      "calculate": "datum.key",
+      "as": "state"
+    }
+    {
+      "calculate": "datum.energy.value",
+      "as": "energy"
+    }
+  ],
+  "mark": {"type": "bar", "color": "#036981"},
+  "encoding": {
+    "y": {
+      "title": false,
+      "field": "state",
+      "axis": {"labelAngle": 0, "grid": false}
+    },
+    "x": {
+      "field": "energy",
+      "type": "quantitative",
+      "axis": {"format": ".0f"},
+      "title": "IUTRANSLATE Energy (kWh)"
+    },
+    "tooltip": [
+      {
+        "field": "energy",
+        "title": "IUTRANSLATE Energy (kWh)",
+        "format": ".0f"
+      },
+      {
+        "field": "state",
+        "type": "nominal",
+        "title": "IUTRANSLATE State"
+      }
+    ]
+  }
+}

@@ -1,0 +1,183 @@
+/* 
+1. Choose the name of the associated model
+    - You have to replace 'model_name' by the index of your model
+2. Choose the machine state property :
+    - Replace 'machine_state' by the variable you want to represent.
+*/
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": {
+      "%context%": true,
+      "%timefield%": "ts_beg",
+      "%translate_data%": true,
+      "index": "model_name",
+      "body": {
+        "aggs": {
+          "time": {
+            "date_histogram": {
+              "field": "ts_beg",
+              "interval": "1d"
+            },
+            "aggs": {
+              "status": {
+                "terms": {
+                  "field": "machine_state",
+                  "size": 1000
+                },
+                "aggs": {
+                  "duration_second": {
+                    "sum": {"field": "duration"}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "from": 0,
+        "size": 0
+      }
+    },
+    "format": {
+      "property": "aggregations.time.buckets"
+    }
+  },
+  "transform": [
+	{
+      "calculate": "datum.key",
+      "as": "date"
+    },
+    {
+      "calculate": "datum.status.buckets",
+      "as": "status"
+    },
+    {"flatten": ["status"], "as": ["status"]},
+    {
+      "calculate": "datum.status.key",
+      "as": "state"
+    },
+    {
+      "calculate": "datum.status.duration_second.value/3600",
+      "as": "duration_hour"
+    },
+    {
+      "window": [
+        {
+          "field": "duration_hour",
+          "op": "mean",
+          "as": "duration_avg"
+        }
+      ],
+      "groupby": ["state"],
+      "frame": [-6, 1]
+    }
+  ],
+  "layer": [
+	// Layer 1: Bar
+    {
+      "transform": [
+        {"filter": {"param": "state_filter"}}
+      ],
+      "mark": {
+        "type": "bar",
+        "width": {"band": 0.7},
+        "cornerRadiusTopLeft": 4,
+        "cornerRadiusTopRight": 4
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "ordinal",
+          "axis": {
+            "title": false,
+            "labelBound": true,
+            "labelAlign": "center",
+            "labelSeparation": 5
+          },
+          "timeUnit": "yearmonthdate"
+        },
+        "y": {
+          "field": "duration_hour",
+          "type": "quantitative",
+          "title": "State duration (h)"
+        },
+        "color": {
+          "field": "state",
+          "title": "State",
+          "legend": {
+            "labelLimit": 250,
+            "labelExpr": "translateDataValue(datum.value)",
+            "orient": "top",
+            "direction": "horizontal"
+          }
+        },
+        "tooltip": [
+          {
+            "value": {
+              "expr": "translateDataValue(datum.state)"
+            },
+            "field": "state",
+            "title": "State"
+          },
+          {
+            "title": "Duration (h)",
+            "field": "duration_hour",
+			"format":".1f"
+          },
+          {
+            "field": "date",
+            "type": "temporal",
+            "title": "Date",
+            "timeUnit": "utcyearmonthdatehours"
+          }
+        ]
+      }
+    },
+	// Layer 2: trend
+    {
+      "params": [
+        {
+          "name": "state_filter",
+          "select": {
+            "type": "point",
+            "fields": ["state"]
+          },
+          "bind": "legend"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "strokeWidth": 3,
+        "strokeDash": [3, 1]
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "ordinal",
+          "axis": {
+            "title": false,
+            "labelBound": true,
+            "labelAlign": "center",
+            "labelSeparation": 5
+          },
+          "timeUnit": "yearmonthdate"
+        },
+        "y": {
+          "aggregate": "sum",
+          "field": "duration_avg",
+          "type": "quantitative",
+          "title": false
+        },
+        "color": {
+          "condition": {
+            "param": "state_filter",
+            "field": "state",
+            "type": "ordinal"
+          },
+          "value": "transparent",
+          "title": "State Tendancy"
+        }
+      }
+    }
+  ]
+}

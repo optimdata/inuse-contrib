@@ -1,0 +1,195 @@
+/* 
+1. Choose the name of the associated model
+    - You have to replace 'model_name' by the index of your model
+2. Choose the default property :
+    - Replace 'machine_detailed_default_state' by the default property.
+	- Replace 'machine_detailed_default_state_unique' by the becomes_true of default property.
+*/
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": {
+      "index": "model_name",
+      "%context%": true,
+      "%timefield%": "ts_beg",
+      "%translate_data%": true,
+      "body": {
+        "aggs": {
+          "multi": {
+            "terms": {
+              "field": "machine_detailed_default_state",
+              "size": 100
+            },
+            "aggs": {
+              "duration_error": {
+                "sum": {"field": "duration"}
+              },
+              "multi_occurence": {
+                "terms": {
+                  "field": "machine_detailed_default_state_unique",
+                  "size": 100
+                }
+              }
+            }
+          }
+        },
+        "from": 0,
+        "size": 0
+      }
+    },
+    "format": {
+      "property": "aggregations.multi.buckets"
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.key",
+      "as": "multi_code"
+    },
+    {
+      "calculate": "datum.duration_error.value /3600",
+      "as": "duration_error"
+    },
+    {
+      "calculate": "datum.multi_occurence.buckets",
+      "as": "multi_occurence"
+    },
+    {
+      "flatten": ["multi_occurence"],
+      "as": ["multi_occurence"]
+    },
+    {
+      "calculate": "datum.multi_occurence.doc_count",
+      "as": "multi_count"
+    },
+    {
+      "calculate": "datum.duration_error",
+      "as": "ref_data"
+    },
+    {
+      "filter": "datum.multi_occurence.key==datum.key"
+    },
+    {
+      "calculate": "datum.ref_data*3600",
+      "as": "default_duration"
+    },
+    {
+      "calculate": "floor(datum.default_duration/3600)",
+      "as": "default_duration_hours"
+    },
+    {
+      "calculate": "floor((datum.default_duration-3600*datum.default_duration_hours)/60)",
+      "as": "default_duration_minutes"
+    },
+    {
+      "calculate": "floor((datum.default_duration-3600*datum.default_duration_hours-60*datum.default_duration_minutes))",
+      "as": "default_duration_seconds"
+    },
+    {
+      "calculate": "datum.default_duration_hours+':'+(datum.default_duration_minutes > 9 ? '' : '0')+datum.default_duration_minutes+':'+(datum.default_duration_seconds > 9 ? '' : '0')+datum.default_duration_seconds",
+      "as": "default_duration_tooltip"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "square",
+        "size": 200,
+        "opacity": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "multi_count",
+          "type": "quantitative",
+          "title": "IUTRANSLATE Occurences",
+          "axis": {
+            "grid": true,
+            "labelFontSize": 10,
+            "labelAngle": 0
+          }
+        },
+        "y": {
+          "field": "ref_data",
+          "type": "quantitative",
+          "title": "IUTRANSLATE Duration (h)",
+          "axis": {"grid": true, "ticks": false},
+          "format": ".3"
+        },
+        "tooltip": [
+          {
+            "title": "IUTRANSLATE Default",
+            "field": "multi_code"
+          },
+          {
+            "title": "IUTRANSLATE Occurences",
+            "field": "multi_count",
+            "type": "quantitative"
+          },
+          {
+            "title": "IUTRANSLATE Duration",
+            "field": "default_duration_tooltip"
+          }
+        ],
+        "color": {
+          "field": "multi_code",
+          "type": "ordinal",
+          "scale": {"scheme": "category20"},
+          "legend": {"labelLimit": 350},
+          "title": null
+        }
+      },
+      "params": [
+        {
+          "name": "grid",
+          "select": {
+            "type": "interval",
+            "encodings": ["x", "y"]
+          },
+          "bind": "scales"
+        }
+      ]
+    },
+    {
+      "transform": [
+        {
+          "aggregate": [
+            {
+              "op": "max",
+              "field": "ref_data",
+              "as": "ref_data_max"
+            },
+            {
+              "op": "max",
+              "field": "multi_count",
+              "as": "multi_count_max"
+            }
+          ]
+        },
+        {
+          "calculate": "datum.ref_data_max*1.02",
+          "as": "ref_data_max"
+        },
+        {
+          "calculate": "datum.multi_count_max*1.02",
+          "as": "multi_count_max"
+        }
+      ],
+      "mark": {
+        "type": "square",
+        "size": 400,
+        "opacity": 0,
+        "color": "transparent"
+      },
+      "encoding": {
+        "x": {
+          "field": "multi_count_max",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "ref_data_max",
+          "type": "quantitative"
+        }
+      }
+    }
+  ]
+}
