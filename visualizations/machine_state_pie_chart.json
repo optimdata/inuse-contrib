@@ -1,0 +1,124 @@
+/* 
+1. Choose the name of the associated model
+    - You have to replace 'model_name' by the index of your model
+2. Choose the machine state property :
+    - Replace 'machine_state' by the variable you want to represent.
+*/
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": "transparent",
+  "view": {
+    "fill": "transparent",
+    "stroke": "transparent"
+  },
+  "data": {
+    "url": {
+      "%context%": true,
+      "%timefield%": "ts_beg",
+      "%translate_data%": true,
+      "index": "model_name",
+      "body": {
+        "aggs": {
+          "state_bucket": {
+            "terms": {"field": "machine_state"},
+            "aggs": {
+              "duration": {
+                "sum": {"field": "duration"}
+              }
+            }
+          }
+        },
+        "size": 0
+      }
+    },
+    "format": {
+      "property": "aggregations.state_bucket.buckets"
+    }
+  },
+  "transform": [
+    {"calculate": "datum.key", "as": "state"},
+    {
+      "calculate": "datum.duration.value/3600",
+      "as": "duration_hour"
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "sum",
+          "field": "duration_hour",
+          "as": "cumulative_value"
+        }
+      ]
+    },
+    {
+      "calculate": "datum.duration_hour/datum.cumulative_value",
+      "as": "percent"
+    },
+    {
+      "calculate": "min(width, height)/2",
+      "as": "rad"
+    },
+    // Duration tooltip at the format HH:mm:ss
+    {
+      "calculate": "datum.duration_hour*3600",
+      "as": "duration_second"
+    },
+    {
+      "calculate": "floor(datum.duration_second/3600)",
+      "as": "state_duration_hours"
+    },
+    {
+      "calculate": "floor((datum.duration_second-3600*datum.state_duration_hours)/60)",
+      "as": "state_duration_minutes"
+    },
+    {
+      "calculate": "floor((datum.duration_second-3600*datum.state_duration_hours-60*datum.state_duration_minutes))",
+      "as": "state_duration_seconds"
+    },
+    {
+      "calculate": "datum.state_duration_hours+ ':'+(datum.state_duration_minutes > 9 ? '' : '0')+datum.state_duration_minutes+':'+(datum.state_duration_seconds > 9 ? '' : '0')+datum.state_duration_seconds",
+      "as": "duration_tooltip"
+    }
+  ],
+  "mark": {
+    "type": "arc",
+    "outerRadius": {"expr": "datum.rad*0.97"},
+    "innerRadius": {"expr": "datum.rad*0.6"},
+    "stroke": null
+  },
+  "encoding": {
+    "theta": {
+      "field": "duration_hour",
+      "type": "quantitative"
+    },
+    "color": {
+      "field": "state",
+      "title": "State",
+      "legend": {
+        "labelFontSize": 12,
+        "titleFontSize": 17,
+        "labelLimit": 100,
+        "labelExpr": "translateDataValue(datum.value)",
+        "title": false
+      }
+    },
+    "tooltip": [
+      {
+        "value": {
+          "expr": "translateDataValue(datum.state)"
+        },
+        "field": "state",
+        "title": "State"
+      },
+      {
+        "field": "duration_tooltip",
+        "title": "Duration"
+      },
+      {
+        "field": "percent",
+        "format": ".2%",
+        "title": "Proportion"
+      }
+    ]
+  }
+}

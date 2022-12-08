@@ -1,0 +1,160 @@
+/* 
+1. Choose the name of the associated model
+    - You have to replace 'model_name' by the index of your model
+2. Choose the default property :
+	- Replace 'machine_detailed_default_state_unique' by the becomes_true of default property.
+*/
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": {
+      "index": "model_name",
+      "%context%": true,
+      "%timefield%": "ts_beg",
+      "%translate_data%": true,
+      "body": {
+        "aggs": {
+          "multi": {
+            "terms": {
+              "field": "machine_detailed_default_state_unique",
+              "size": 100
+            },
+          }
+        },
+        "from": 0,
+        "size": 0
+      }
+    },
+    "format": {
+      "property": "aggregations.multi.buckets"
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.key",
+      "as": "multi_code"
+    },
+    {
+      "calculate": "datum.doc_count",
+      "as": "multi_count"
+    },
+    {
+      "sort": [
+        {
+          "field": "multi_count",
+          "order": "descending",
+          "op": "max"
+        }
+      ],
+      "ignorePeers": true,
+      "window": [
+        {
+          "op": "sum",
+          "field": "multi_count",
+          "as": "cumulative_count"
+        },
+        {"op": "row_number", "as": "row_number"}
+      ]
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "max",
+          "field": "cumulative_count",
+          "as": "max_cum_count"
+        }
+      ]
+    },
+    {
+      "calculate": "datum.cumulative_count*100/datum.max_cum_count",
+      "as": "cum_percent"
+    },
+    {"filter": "datum.row_number<=10"}
+  ],
+  "encoding": {
+    "x": {
+      "field": "multi_code",
+      "type": "ordinal",
+      "title": "Default",
+      "axis": {
+        "grid": true,
+        "labelLimit": 100,
+        "labelFontSize": 10,
+        "labelAngle": 0
+      },
+      "sort": {
+        "field": "row_number",
+        "order": "ascending",
+        "op": "max"
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "width": {"band": 0.5},
+        "cornerRadiusTopLeft": 10,
+        "cornerRadiusTopRight": 10,
+        "color": "#C1E1C1"
+      },
+      "encoding": {
+        "y": {
+          "field": "multi_count",
+          "type": "quantitative",
+          "title": "Occurrence",
+          "axis": {"grid": false, "ticks": false},
+          "format": ".0f"
+        },
+        "color": {
+          "field": "multi_count",
+          "type": "quantitative",
+          "legend":false,
+          "scale": {"scheme": "reds"}
+        },
+        "tooltip": [
+          {
+            "title": "Alarm",
+            "field": "multi_code",
+            "type": "ordinal"
+          },
+          {
+            "title": "Occurrences",
+            "field": "multi_count",
+            "type": "quantitative",
+            "format": ".0f"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [],
+      "mark": {
+        "type": "line",
+        "point": {
+          "filled": false,
+          "fill": "white",
+          "color": "#024FD8"
+        },
+        "color": "#024FD8"
+      },
+      "encoding": {
+        "y": {
+          "field": "cum_percent",
+          "type": "quantitative",
+          "title": "Cumulative Percentage (%)",
+          "axis": {"grid": true}
+        },
+        "tooltip": [
+          {
+            "title": "Cumulative Percentage (%)",
+            "field": "cum_percent",
+            "type": "quantitative",
+            "format": ".3"
+          }
+        ]
+      }
+    }
+  ],
+  "resolve": {"scale": {"y": "independent"}}
+}
