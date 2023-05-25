@@ -1,0 +1,73 @@
+{
+  "$schema": "https://ivy-vis.netlify.com/assets/ivy.0.0.1.json",
+  "templateName": "Gauge",
+  "templateDescription": "FILL IN DESCRIPTION",
+  "templateAuthor": "Sextans-Scorpius-15",
+  "templateLanguage": "vega",
+  "disallowFanOut": false,
+  "customCards": [],
+  "widgets": [
+    {
+      "name": "boundary",
+      "type": "Slider",
+      "config": {"minVal": "0.01", "maxVal": "3.14", "step": "0.01", "defaultValue": "1.88"},
+      "displayName": "Boundaries"
+    },
+    {
+      "name": "ticks_font_size",
+      "type": "Slider",
+      "config": {"minVal": 0, "maxVal": "3", "step": "0.1", "defaultValue": "1"},
+      "displayName": "Scales font size"
+    },
+    {
+      "name": "value_font_size",
+      "type": "Slider",
+      "config": {"minVal": 0, "maxVal": "3", "step": "0.1", "defaultValue": "1"},
+      "displayName": "Value font size"
+    },
+    {
+      "name": "big_ticksNumber",
+      "type": "Slider",
+      "config": {"minVal": 0, "maxVal": "11", "step": 1, "defaultValue": 5},
+      "displayName": "Number of big ticks on the scale"
+    },
+    {
+      "name": "small_ticksNumber",
+      "type": "Slider",
+      "config": {"minVal": 0, "maxVal": "101", "step": 1, "defaultValue": "41"},
+      "displayName": "Number of small ticks on the scale"
+    },
+    {
+      "name": "tick_width",
+      "type": "Slider",
+      "config": {"minVal": "0", "maxVal": "2", "step": "0.1", "defaultValue": "0.7"},
+      "displayName": "Width of the ticks"
+    },
+    {
+      "name": "small_tick_size",
+      "type": "Slider",
+      "config": {"minVal": "1", "maxVal": "5", "step": "0.5", "defaultValue": "2"},
+      "displayName": "Size of the small ticks"
+    },
+    {
+      "name": "big_tick_size",
+      "type": "Slider",
+      "config": {"minVal": "1", "maxVal": "6", "step": "0.5", "defaultValue": "2.5"},
+      "displayName": "Size of the big ticks"
+    },
+    {
+      "name": "scale_in_gauge",
+      "type": "Switch",
+      "config": {"active": "false", "inactive": "true", "defaultsToActive": true},
+      "displayName": "Scale in or outside of the gauge"
+    },
+    {"name": "unit", "type": "FreeText", "config": {"useParagraph": false}, "displayName": "Units"},
+    {
+      "name": "showNeedle",
+      "type": "Switch",
+      "config": {"active": "true", "inactive": "false", "defaultsToActive": true},
+      "displayName": "Show Needle"
+    }
+  ],
+  "code": "SEE BODY"
+}
