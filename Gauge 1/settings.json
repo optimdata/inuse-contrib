@@ -1,0 +1,37 @@
+{
+  "paramValues": {
+    "big_tick_size": "2.5",
+    "big_ticksNumber": "5",
+    "boundary": "1.88",
+    "ColorList1": "\"accent\"",
+    "DataTypeOptions1": "\"#4E79A7\"",
+    "FreeText1": "",
+    "FreeText11": "",
+    "FreeText9": "",
+    "scale_in_gauge": "false",
+    "showNeedle": "true",
+    "Slider11": 5,
+    "small_tick_size": "2",
+    "small_ticksNumber": "41",
+    "tick_width": "0.7",
+    "ticks_font_size": "1",
+    "unit": "\"L\"",
+    "value_font_size": "1"
+  },
+  "systemValues": {
+    "viewsToMaterialize": {
+      "boundary": [],
+      "ticks_font_size": [],
+      "value_font_size": [],
+      "big_ticksNumber": [],
+      "small_ticksNumber": [],
+      "tick_width": [],
+      "small_tick_size": [],
+      "big_tick_size": [],
+      "scale_in_gauge": [],
+      "unit": [],
+      "showNeedle": []
+    },
+    "dataTransforms": []
+  }
+}
