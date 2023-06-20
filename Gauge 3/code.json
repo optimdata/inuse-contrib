@@ -1,0 +1,162 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  
+  /*to custumize the gauge's appearance change the parameters defined below by :
+    {"name": "name","value": "value"} or {"name": "name","expr": "expression"}
+    The "name" part describes the parameter. To custimize a parameter, change its value or expression.
+  */
+
+  "title" : {"text" : "Title" , "fontSize" : {"expr": "font_size"}},
+
+  "params": [
+
+    {"name": "indicator_width","value": "10"},                // represents the scale's width
+
+    {"name": "boundaries","expr": "3/5*PI"},            // represents the scale's start and end
+    
+    {"name": "gauge_width","value": "20"},                // represents the gauge's width
+    {"name": "empty_gauge_color","value": "#BABABA"},          // represents the color of the empty part of the gauge
+    {"name": "gauge_color","value": "#FC883B"},          // represents the color of the gauge
+
+    {"name": "font","value":" Verdana"},           // represents the text font
+    {"name": "font_size","value": "14"},                // represents the text size
+    {"name": "font_color","value": "#FC883C"},           // represents the text color
+
+    {"name": "units","value": "mm/s"},              // represents the measurement unit
+    
+    {"name": "max_possible_value","value": "2"},                 // represents the maximum measurable value this will be used to calculate the ratio with the measured value
+
+    {"name": "backrground_color","value": "transparent"}        // represents the background color
+  ],
+
+  "background": {
+    "expr": "backrground_color"
+  },
+  "data": {
+    "values": [
+      {
+        "to_be_replaced_by_dynamic_value": "0.4"
+      }
+    ]
+  },
+  "transform": [
+    {
+      "calculate": "min ( max( datum.to_be_replaced_by_dynamic_value/max_possible_value , 0) , 1)",
+      "as": "ratio"
+    },
+    {
+      "calculate": "(2*datum.ratio-1)*boundaries",
+      "as": "thetastop"
+    },
+    {
+      "calculate": "-boundaries",
+      "as": "indicator_start"
+    },
+    {
+      "calculate": "min((width+gauge_width)/2, height/(1-cos(boundaries)))",
+      "as": "radius"
+    },
+    {
+      "calculate": "datum.radius/100",
+      "as": "dimensions"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "arc",
+        "radius": {
+          "expr": "datum.radius"
+        },
+        "radius2": {
+          "expr": "datum.radius-gauge_width*datum.dimensions"
+        },
+        "theta": {
+          "expr": "datum.indicator_start"
+        },
+        "theta2": {
+          "expr": "boundaries"
+        },
+        "cornerRadius": 3
+      },
+      "encoding": {
+        "color": {
+          "type": "quantitative",
+          "scale": {"domain": [0, 1]},
+          "value": {
+            "expr": "empty_gauge_color"
+          }
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "arc",
+        "radius": {
+          "expr": "datum.radius"
+        },
+        "radius2": {
+          "expr": "datum.radius-gauge_width*datum.dimensions"
+        },
+        "theta": {
+          "expr": "datum.indicator_start"
+        },
+        "theta2": {
+          "expr": "datum.thetastop"
+        },
+        "cornerRadius": 5
+      },
+      "encoding": {
+        "color": {
+          "value": {
+            "expr": "gauge_color"
+          }
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "arc",
+        "radius": {
+          "expr": "datum.radius-gauge_width*datum.dimensions"
+        },
+        "radius2": {
+          "expr": "datum.radius-indicator_width-gauge_width*datum.dimensions"
+        },
+        "theta": {
+          "expr": "datum.indicator_start"
+        },
+        "theta2": {
+          "expr": "boundaries"
+        }
+      },
+      "encoding": {
+        "color": {
+          "type": "quantitative",
+          "scale": {"domain": [0, 1]},
+          "value": "#6F7170"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": {
+          "expr": "font_size*datum.dimensions"
+        },
+        "fontWeight": "bold",
+        "font": {"expr": "font"},
+        "text": {
+          "expr": "datum.to_be_replaced_by_dynamic_value+' ' + units "
+        }
+      },
+      "encoding": {
+        "color": {
+          "value": {
+            "expr": "font_color"
+          }
+        }
+      }
+    }
+  ]
+}
