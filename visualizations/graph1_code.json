@@ -1,8 +1,25 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
 	
+   /*to custumize the gauge's appearance change the parameters defined below by :
+    {"name": "name","value": "value"} or {"name": "name","expr": "expression"}
+    The "name" part describes the parameter. To custimize a parameter, change its value or expression.
+  */
+	
+   "params" : [
+	 {"name" : "title" , "value" : "Title"},
+	 {"name" : "bar_graph_axis_title" , "value" : "Bar graph Y axis title"},
+	 {"name" : "bar_graph_axis_title_color" , "value" : "#9ac13a"},
+	 {"name" : "bar_color1" , "value" : "#9ac13a"},
+	 {"name" : "bar_color2" , "value" : "#646567"},
+	 {"name" : "line_color" , "value" : "grey"},
+	 {"name" : "line_dot_size" , "value" : "70"},
+	 {"name" : "line_graph_axis_title" , "value" : "Line graph Y axis Title"},
+	 {"name" : "line_graph_axis_title_color" , "value" : "grey"},
+	],
+	
   "title": {
-    "text": "Title",
+    "text": {"expr" : "title"},
     "fontSize": 20,
 	  "font":{"value": "verdana"}
   },
@@ -116,8 +133,8 @@
           "field": "bar_graph_variable",
           "type": "quantitative",
           "axis": {
-            "title": "Bar graph Y axis title",
-			"titleColor" : "#9ac13a",
+            "title": {"expr" : "bar_graph_axis_title"},
+			"titleColor" : {"expr" : "bar_graph_axis_title_color"},
 			"font":{"value": "futura"}
           }
         },
@@ -157,8 +174,8 @@
               "name3.value"
             ],
             "range": [ // defines the color of the bars 
-              "#9ac13a",
-              "#646567"
+			  {"expr" : "bar_color1"},
+			  {"expr" : "bar_color2"}
             ]
           }
         }
@@ -168,18 +185,18 @@
       "mark": {
         "type": "line",
         "point": {
-          "color": "grey",
-          "size": 75
+          "color": {"expr" : "line_color"},
+          "size": {"expr" : "line_dot_size"}
         },
-        "color": "grey"
+        "color": {"expr" : "line_color"}
       },
       "encoding": {
         "y": {
           "field": "line_graph_variable",
           "type": "quantitative",
           "axis": {
-            "title": "Line graph Y axis Title",
-            "titleColor": "grey"
+			"title": {"expr" : "line_graph_axis_title"},
+			"titleColor" : {"expr" : "line_graph_axis_title_color"}
           }
         },
         "tooltip": [
