@@ -213,7 +213,7 @@
     },
     {
       "type": "text",
-      "description":"displayed main value at the bottom center of the gauge ",
+      "description":"Displays hte values of each factor",
       "name": "lengend",
       "from": {"data": "radius"},
       "encode": {
