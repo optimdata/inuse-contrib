@@ -31,9 +31,11 @@ To configure a visualization:
 # Gallery
 
 |   |   |  |
-| :---: | :---: | :---: |                                     
-| ![gauge1](gauge1.png) | ![fft1](fft1.png) | ![area_chart_with_points](area_chart_with_points.png) | 
-| [Simple gauge](./gauge1.json) | [Spectral representation](./fft1.json) | [Area chart with points](./area_chart_with_points.json) |                              
+| :---: | :---: | :---: |
+| ![gauge1](Gauge_1.png) | ![gauge2](Gauge_2.png) | ![gauge3](Gauge_3.png) | 
+| [Gauge Template 1](./gauge1_code.json) | [Gauge Template 2](./gauge2_code.json) | [Gauge Template 3](./gauge3_code.json) |
+| ![gauge1](Gauge_1.png) | ![fft1](fft1.png) | ![area_chart_with_points](area_chart_with_points.png) | 
+| [Gauge with ElasticSearch Request](./gauge1.json) | [Spectral representation](./fft1.json) | [Area chart with points](./area_chart_with_points.json) |                              
 | ![average_production_calendar](average_production_calendar.png) | ![average_quality_metric](average_quality_metric.png) | ![bar_chart_with_trends_and_interactive_legend](bar_chart_with_trends_and_interactive_legend.png) | 
 | [Average production calendar](./average_production_calendar.json) | [Average quality metric (aggregation combination)](./average_quality_metric.json) | [Bar chart with trends and interactive legend](./bar_chart_with_trends_and_interactive_legend.json) |
 | ![default_duration_and_occurrence_pareto](default_duration_and_occurrence_pareto.png) | ![top_10_default_duration_pareto](top_10_default_duration_pareto.png) | ![top_10_default_occurence_pareto](top_10_default_occurence_pareto.png) | 
