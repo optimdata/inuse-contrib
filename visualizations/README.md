@@ -34,7 +34,12 @@ To configure a visualization:
 | :---: | :---: | :---: |
 | ![gauge1](Gauge_1.png) | ![gauge2](Gauge_2.png) | ![gauge3](Gauge_3.png) | 
 | [Gauge Template 1](./gauge1_code.json) | [Gauge Template 2](./gauge2_code.json) | [Gauge Template 3](./gauge3_code.json) |
-| ![gauge1](Gauge_1.png) | ![fft1](fft1.png) | ![area_chart_with_points](area_chart_with_points.png) | 
+| ![gauge4](Gauge_4.png) | ![gauge5](Gauge_5.png) | ![OEE1](OEE_1.png) | 
+| [Gauge Template 4](./gauge4_code.json) | [Gauge Template 5](./gauge5_code.json) | [OEE Template 1](./OEE1_code.json) |
+| ![gauge1](gauge1.png) | ![fft1](fft1.png) | ![area_chart_with_points](area_chart_with_points.png) |
+| ![OEE2](OEE_2.png) | ![bar&line](s.png) | ![OEE1](OEE_1.png) | 
+| [OEE Template 2](./OEE2_code.json) | [Bar and Line Graph with fold transform](./graph1_code.json) ||
+| ![gauge1](gauge1.png) | ![fft1](fft1.png) || 
 | [Gauge with ElasticSearch Request](./gauge1.json) | [Spectral representation](./fft1.json) | [Area chart with points](./area_chart_with_points.json) |                              
 | ![average_production_calendar](average_production_calendar.png) | ![average_quality_metric](average_quality_metric.png) | ![bar_chart_with_trends_and_interactive_legend](bar_chart_with_trends_and_interactive_legend.png) | 
 | [Average production calendar](./average_production_calendar.json) | [Average quality metric (aggregation combination)](./average_quality_metric.json) | [Bar chart with trends and interactive legend](./bar_chart_with_trends_and_interactive_legend.json) |
