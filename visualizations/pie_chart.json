@@ -25,7 +25,7 @@
     {"name": "outerRadius", "update": "min(width/2, height/2)"},
     {"name": "innerRadius", "update": "outerRadius*0.6"},
     {"name": "cornerRadius", "value": 0},
-    {"name": "sort", "value": false},
+    {"name": "sort", "value": false}, // choose to sort the values in ascending order
     {"name": "font_Size", "update": "outerRadius/7"}, // controls the legend font size
   ],
   
