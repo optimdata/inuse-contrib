@@ -45,7 +45,24 @@ To configure a visualization:
 | ![default_duration_and_occurrence_pareto](default_duration_and_occurrence_pareto.png) | ![top_10_default_duration_pareto](top_10_default_duration_pareto.png) | ![top_10_default_occurence_pareto](top_10_default_occurence_pareto.png) | 
 | [Default duration and occurrence pareto](./default_duration_and_occurrence_pareto.json) | [Top 10 default duration pareto](./top_10_default_duration_pareto.json) | [Top 10 default occurence pareto](./top_10_default_occurence_pareto.json) |
 | ![horizontal_bar_chart_with_text_translation](horizontal_bar_chart_with_text_translation.png) | ![machine_state_pie_chart](machine_state_pie_chart.png) | ![pie chart with multiple aggregations](pie_chart1.png) | 
-| [Horizontal bar chart with text translation](./horizontal_bar_chart_with_text_translation.json) | [Machine state pie chart](./machine_state_pie_chart.json) | [Pie Chart with multiple ElasticSearch aggregations](pie_chart.json)  |    
+| [Horizontal bar chart with text translation](./horizontal_bar_chart_with_text_translation.json) | [Machine state pie chart](./machine_state_pie_chart.json) | [Pie Chart with multiple ElasticSearch aggregations](pie_chart.json)  |
+
+# FAQ for Debugging Vega Visualisation's
+
+1. How do I know if my Elastic Search Data Request worked ?
+
+By using the 'inspect' tool provided by chrome then typing in the console part of the tool : 'VEGA_DEBUG.view._runtime' you can see if you are receiving data. Simply go to data > source_0 > values > value. If you have an array of values then your request worked. If you are not receiving data then something is wrong with the code.
+
+2. What does the 'Invalid Config' error mean ?
+
+This error has to do with the Vega code. This means that there is a syntax error in the visualisation's code and not in the Elastic Search (data) part. Check that you are not missing any brackets or commas.
+
+3. Why do I have a blank screen and nothing appears ?
+
+This can either have to do with an error in the data request or bad coding of the visualisation. To check if you are receiving data use the chrome tool as explain in 1. If it has to do with Vega, check all the field name's for any typo's and insure that nothing is missing.
+   
+
+
 
 # Contributing
 
