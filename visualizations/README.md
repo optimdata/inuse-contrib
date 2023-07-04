@@ -36,7 +36,7 @@ To configure a visualization:
 | [Gauge Template 1](./gauge1_code.json) | [Gauge Template 2](./gauge2_code.json) | [Gauge Template 3](./gauge3_code.json) |
 | ![gauge4](Gauge_4.png) | ![gauge5](Gauge_5.png) | ![OEE1](OEE_1.png) | 
 | [Gauge Template 4](./gauge4_code.json) | [Gauge Template 5](./gauge5_code.json) | [OEE Template 1](./OEE1_code.json) |
-| ![OEE2](OEE_2.png) | ![bar&line](graph_and_bar.png) |  | 
+| ![OEE2](OEE_2.png) | ![bar&line](graph_and_bar.png) | ![Scatter plot](./scatter_plot.png) | 
 | [OEE Template 2](./OEE2_code.json) | [Bar and Line Graph with fold transform](./graph1_code.json) | [Scatter plot with a data request based on the time stamp](./scatter_plot.json) |
 | ![gauge1](gauge1.png) | ![fft1](fft1.png) | ![area_chart_with_points](area_chart_with_points.png) |
 | [Gauge with ElasticSearch Request](./gauge1.json) | [Spectral representation](./fft1.json) | [Area chart with points](./area_chart_with_points.json) |                              
