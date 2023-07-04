@@ -8,8 +8,6 @@
   /* 
 1. Choose the name of the associated model
     - You have to replace 'model_name' by the index of your model
-2. Choose the machine state property :
-    - Replace 'machine_state' by the variable you want to represent.
 	*/
 	
 	"title": {
