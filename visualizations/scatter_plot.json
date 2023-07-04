@@ -1,0 +1,93 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	
+	"params": [
+	  
+	// The first two params control the shape of the points on each of scatter plot you can choose between any of thes options : "arrow","circle", "square","cross", "diamond","triangle", "triangle-up", "triangle-down", "triangle-right", "triangle-left", "wedge", "stroke", "M0,.5L.6,.8L.5,.1L1,-.3L.3,-.4L0,-1L-.3,-.4L-1,-.3L-.5,.1L-.6,.8L0,.5Z"
+	  
+    {"name": "shape1","value": "circle",},
+	{"name": "shape2","value": "circle",},
+      
+	//angle of the points
+    {"name": "angle1","value": 0},
+	{"name": "angle2","value": 0},
+	  
+	// size of the points
+    {"name": "size1","value": 30},
+	{"name": "size2","value": 30},
+	  
+	// StrockWidth of the points  
+    {"name": "strokeWidth1","value": 2},
+	{"name": "strokeWidth2","value": 2},
+	  
+	// color of the points
+	{"name": "color1","value": "blue"},
+	{"name": "color2","value": "red"},
+  ],
+	
+  "data": {
+	// Elastic Search data request with no aggregation. The data is only filtered based on it's time stamp
+    "url": {
+      "%context%": true,
+      "%timefield%": "ts_beg",
+      "body": {
+        "size": 10000, //controls the number of data points to receive(10000 is the maximum)
+        "sort": [
+          {
+			"ts_beg": 
+			{
+			  "order": "desc" // gives the most recent n number of data points. If we changed it to asc we would get the oldest points stored on the server
+			}
+		  }
+        ]
+      },
+      "index": "model_name" // add model name here
+    },
+    "format": {"property": "hits.hits"} // filters the data to only get the variables that start with hits.hits
+  },
+  "layer": [ // the layer function enables the superposition of multiple "mark" vizualizations
+    {
+      "mark": { // scatter plot of points
+		"type" : "point",
+		"angle": {"expr": "angle1"},
+    	"size": {"expr": "size1"},
+   		"shape": {"expr": "shape1"},
+    	"strokeWidth": {"expr": "strokeWidth1"},
+		"color": {"expr": "color1"}
+	  }, 
+      "encoding": {
+        "x": {
+          "field": "variable_x", // add x field here
+          "type": "quantitative" // type of the variable 
+        },
+        "y": {
+          "field": "variable_y", // add y field here
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "mark": { // scatter plot of points
+		"type" : "point",
+		"angle": {"expr": "angle2"},
+    	"size": {"expr": "size2"},
+   		"shape": {"expr": "shape2"},
+    	"strokeWidth": {"expr": "strokeWidth2"},
+		"color": {"expr": "color2"}
+	  },
+      "encoding": {
+        "x": {
+          "field": "variable_x", // add x field here
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "variable_y", // add x field here
+          "type": "quantitative"
+        },
+        "order": { // sorts the points based on there time stamps from least recent to most recent
+          "field": "_source.ts_beg"
+        }
+      }
+    }
+  ]
+}
