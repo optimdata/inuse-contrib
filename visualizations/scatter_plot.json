@@ -1,5 +1,9 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+/* To custumize the vizualization simply change the value of the desired variable in the signals part of the code. This is the only part in which you need to do modifications. We tried to make the variable names as descriptive as possible.
+  For example this line :  {"name": "unit","value":" L"} represents the units. To change the units simply change the value like so : {"name": "unit","value":" mm"}
+  */
 	
 	"params": [
 	  
