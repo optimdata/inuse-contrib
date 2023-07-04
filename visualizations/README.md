@@ -47,7 +47,7 @@ To configure a visualization:
 | ![horizontal_bar_chart_with_text_translation](horizontal_bar_chart_with_text_translation.png) | ![machine_state_pie_chart](machine_state_pie_chart.png) | ![pie chart with multiple aggregations](pie_chart1.png) | 
 | [Horizontal bar chart with text translation](./horizontal_bar_chart_with_text_translation.json) | [Machine state pie chart](./machine_state_pie_chart.json) | [Pie Chart with multiple ElasticSearch aggregations](pie_chart.json)  |
 
-# FAQ for Debugging Vega Visualisation's
+# FAQ for Debugging Vega Visualisations
 
 1. How do I know if my Elastic Search Data Request worked ?
 
@@ -59,7 +59,7 @@ This error has to do with the Vega code. This means that there is a syntax error
 
 3. Why do I have a blank screen and nothing appears ?
 
-This can either have to do with an error in the data request or bad coding of the visualisation. To check if you are receiving data use the chrome tool as explain in 1. If it has to do with Vega, check all the field name's for any typo's and insure that nothing is missing.
+This can either have to do with an error in the data request or bad coding of the visualisation. To check if you are receiving data use the chrome tool as explain in 1. If it has to do with Vega, check all the field names for any typos and insure that nothing is missing.
    
 
 
