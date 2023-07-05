@@ -6,7 +6,6 @@
   */
 
 
-
   "signals": [
 
     // Title
@@ -17,7 +16,7 @@
     {"name": "outerRadius","update": "targetValue ? radiusRef * 0.9 : radiusRef * 0.95"},
     {"name": "radiusRef","update": "min(width/2, height/(1-cos(boundaries)))"},
     {"name": "innerRadius","update": "outerRadius - outerRadius * 0.25"},
-    {"name": "boundaries", "update": "PI/2"},
+    {"name": "boundaries", "update": "3/5*PI"},
 
     // Scale
     {"name": "ticksNumber","value": 11},
@@ -83,17 +82,17 @@
         {
           "type": "formula",
           "as":"radianRef",
-          "expr":"PI * (datum.data/(maxValue - minValue))"
+          "expr":"((maxValue-datum.data)/(maxValue - minValue)) *2*boundaries - boundaries"
         },
         {
           "type": "formula",
           "as":"x",
-          "expr": "centerX - ((outerRadius - (outerRadius - innerRadius) * 0.6) * cos(datum.radianRef))"
+          "expr": "centerX - sin(datum.radianRef)*outerRadius*0.85"
         },
         {
           "type": "formula",
           "as":"y",
-          "expr": "centerY - ((outerRadius - (outerRadius - innerRadius) * 0.7) * sin(datum.radianRef))"
+          "expr": "centerY - cos(datum.radianRef)*outerRadius*0.85"
         }
       ]
     }
