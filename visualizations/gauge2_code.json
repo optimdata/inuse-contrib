@@ -380,7 +380,7 @@
           "text": {
             "signal": "format(mainValue, '.2f') + unit "
           },
-          "fontSize": {"signal": "15"},
+          "fontSize": {"signal": "15*fontFactor"},
           "font": {"value": "futura"}
         }
       }
