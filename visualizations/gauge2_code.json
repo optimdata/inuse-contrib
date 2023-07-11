@@ -8,7 +8,7 @@
   "title": {
     "text": "Title",
     "fontSize": {"signal" : "fontFactor*16"},
-    "font": {"value": "futura"}
+    "font": {"signal": "font"}
   },
   "signals": [
     // Circular marks
@@ -40,6 +40,7 @@
     
     // Text
     {"name": "fontFactor","update": "(outerRadius/5)/25"},
+    {"name": "font","update": "verdana"},
     {"name": "unit","value": " sec/planche"},
 
     // Needle
@@ -362,7 +363,7 @@
           "fill": {
             "signal": "ticksColor"
           },
-          "font": {"value": "futura"}
+          "font": {"signal": "font"}
         }
       }
     },
@@ -381,7 +382,7 @@
             "signal": "format(mainValue, '.2f') + unit "
           },
           "fontSize": {"signal": "15*fontFactor"},
-          "font": {"value": "futura"}
+          "font": {"signal": "font"}
         }
       }
     },
