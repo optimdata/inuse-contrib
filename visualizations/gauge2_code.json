@@ -26,7 +26,7 @@
 
     // Data part
     {"name": "usedValue","update": "min(max(minValue, mainValue), maxValue)"},
-    {"name": "mainValue","update": "50"},
+    {"name": "mainValue","update": "50"}, // add data here
     {"name": "minValue", "value": 0},
     {"name": "maxValue", "value": 100},
     {"name": "backgroundColor","value": "#cbd1d6"},
