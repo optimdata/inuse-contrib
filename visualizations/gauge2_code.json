@@ -7,7 +7,7 @@
 
   "title": {
     "text": "Title",
-    "fontSize": 15,
+    "fontSize": {"signal" : "fontFactor*16"},
     "font": {"value": "futura"}
   },
   "signals": [
