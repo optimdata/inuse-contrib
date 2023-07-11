@@ -6,7 +6,7 @@
     The "name" part describes the parameter. To custimize a parameter, change its value or expression.
   */
 
-  "title" : {"text" : "Title" , "fontSize" : {"expr": "font_size"}},
+  "title" : {"text" : "Title" , "fontSize" : {"expr": "font_size"} , "font" : {"expr": "font"}},
 
 
 
