@@ -6,7 +6,6 @@
     The "name" part describes the parameter. To custimize a parameter, change its value or expression.
   */
 
-  "title" : {"text" : "Title" , "fontSize" : {"expr": "font_size"}},
 
   "params": [
     {"name": "boundaries",             "expr": "3/5*PI"},           // represents the scale's start and end
@@ -29,6 +28,8 @@
 
     {"name": "backrground_color",      "value": "transparent"}      // represents the background color
   ],
+
+  "title" : {"text" : "Title" , "fontSize" : {"expr": "font_size"} , "font" : {"expr": "font"}},
 
   "background": {"expr": "backrground_color"},
 
