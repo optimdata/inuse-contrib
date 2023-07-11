@@ -40,7 +40,7 @@
     
     // Text
     {"name": "fontFactor","update": "(outerRadius/5)/25"},
-    {"name": "font","update": "verdana"},
+    {"name": "font","value": "verdana"},
     {"name": "unit","value": " sec/planche"},
 
     // Needle
