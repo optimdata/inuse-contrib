@@ -1,0 +1,221 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	
+   /*to custumize the gauge's appearance change the parameters defined below by :
+    {"name": "name","value": "value"} or {"name": "name","expr": "expression"}
+    The "name" part describes the parameter. To custimize a parameter, change its value or expression.
+  */
+	
+   "params" : [
+	 {"name" : "title" , "value" : "Title"},
+	 {"name" : "bar_graph_axis_title" , "value" : "Bar graph Y axis title"},
+	 {"name" : "bar_graph_axis_title_color" , "value" : "#9ac13a"},
+	 {"name" : "bar_color1" , "value" : "#9ac13a"},
+	 {"name" : "bar_color2" , "value" : "#646567"},
+	 {"name" : "line_color" , "value" : "grey"},
+	 {"name" : "line_dot_size" , "value" : "70"},
+	 {"name" : "line_graph_axis_title" , "value" : "Line graph Y axis Title"},
+	 {"name" : "line_graph_axis_title_color" , "value" : "grey"},
+	],
+	
+  "title": {
+    "text": {"expr" : "title"},
+    "fontSize": 20,
+	  "font":{"value": "verdana"}
+  },
+	
+  // this is the elasticSearch data request
+  "data": {
+	/*
+	An object instead of a string for the "url" param is treated as an InUse data query. Anything inside this object is not part of the Vega language, but only understood by InUse and Elasticsearch server. This query counts the number of documents per time interval, assuming you have a ts_beg field in your data.
+
+	There is a special handling for the fields surrounded by "%".  They are processed before the the query is sent to Elasticsearch. This way the query becomes context aware, and can use the time range and the synoptic filters.
+	*/
+
+    // Apply the synoptic context filters and scope when set, which comes by default from the entity on which the synoptic is being displayed
+	
+    // See the "Data" tab of the related component for setting them statically
+    "url": {
+      "%context%": true,
+		
+	  // Apply the synoptic context period to filter on the following field
+      "%timefield%": "ts_beg",
+		
+	  // Translate data (if not set, defaults to true)
+      "%translate_data%": true,
+      "index": "model_index", // modify with a model index
+		
+      "body": {
+		 // Aggregate data by the time field into time buckets, counting the number of documents in each bucket.
+        "aggs": {
+          "time_buckets": {
+            "date_histogram": {
+              "field": "ts_beg",
+              "interval": {
+				
+				// %autointerval% can be set to an integer specifying an approximate number of buckets. It will compute a a matching interval value from the synoptic context period.
+                "%autointerval%": 50
+              },
+              "min_doc_count": 0
+            },
+            "aggs": {
+			  // performs a second aggregate of all the data in each time bucket. Here we do a sum. This will give us 3 data list.
+              "name1": { // choose your variable name here
+                "sum": {
+                  "field": "field_1"
+                }
+              },
+              "name2": {
+                "sum": {
+                  "field": "field_2"
+                }
+              },
+              "name3": {
+                "sum": {
+                  "field": "field_3"
+                }
+              }
+            }
+          }
+        },
+		// Speed up the response by only including aggregation results
+        "size": 0
+      }
+    },
+	
+	// For our graph, we only need the list of bucket values.  Use the format.property to discard everything else.
+    "format": {
+      "property": "aggregations.time_buckets.buckets" 
+    }
+  },
+  "transform": [
+    {
+      "calculate": "momentFormat(datum.key, 'lll')", // formats the date as a string which will be displayed along the X axis
+      "as": "time"
+    },
+    {
+      "calculate": "datum.name1.value",
+      "as": "line_graph_variable"
+    },
+    { // The fold transform collapses one or more data fields into two properties: a key property (containing the original data field name) and a value property (containing the data value).
+      "fold": [
+        "name2.value",
+        "name3.value"
+      ],
+      "as": [
+        "colours",
+        "bar_graph_variable"
+      ]
+    }
+  ],
+  // this part is applied to both graphs as it isn't in the "mark" section below
+  "encoding": {
+    "x": {
+      "field": "key",
+      "type": "ordinal",
+      "axis": {
+        "labelAngle": -70,
+        "labelOverlap": true,
+        "title": false,
+        "labelExpr": "momentFormat(datum.value, 'l - LT')"
+      }
+    }
+  },
+  // use a layer when you want to have multiple "mark"
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "cornerRadius": {"expr": 2} // rounds the bars to look cleaner
+      },
+      "encoding": {
+        "y": {
+          "field": "bar_graph_variable",
+          "type": "quantitative",
+          "axis": {
+            "title": {"expr" : "bar_graph_axis_title"},
+			"titleColor" : {"expr" : "bar_graph_axis_title_color"},
+			"font":{"value": "futura"}
+          }
+        },
+        "order": { // the bar graph represents 2 variables so there will be 2 bars stacked one on top of the other. This function gives the order in which the bars will be stacked.
+          "field": "bar_graph_variable",
+          "sort": "descending"
+        },
+        "tooltip": [ // Function showing the values of the variables when you hover over the graphs
+          {
+            "field": "time",
+            "type": "nominal",
+            "title": "Time"
+          },
+          {
+            "field": "name2.value",
+            "type": "quantitative",
+            "title": "display name2" // modify
+          },
+          {
+            "field": "name3.value",
+            "type": "quantitative",
+            "title": "display name3" // modify
+          }
+        ],
+        "color": {
+          "type": "nominal",
+          "field": "colours",
+          "legend": {
+			// Variable display names
+            "labelExpr": "{'name2.value': 'Name 1', 'name3.value': 'Name 2'}[datum.label]",
+            "title": "Legend :",
+			"font":{"value": "futura"}
+          },
+          "scale": {
+            "domain": [
+              "name2.value",
+              "name3.value"
+            ],
+            "range": [ // defines the color of the bars 
+			  {"expr" : "bar_color1"},
+			  {"expr" : "bar_color2"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "point": {
+          "color": {"expr" : "line_color"},
+          "size": {"expr" : "line_dot_size"}
+        },
+        "color": {"expr" : "line_color"}
+      },
+      "encoding": {
+        "y": {
+          "field": "line_graph_variable",
+          "type": "quantitative",
+          "axis": {
+			"title": {"expr" : "line_graph_axis_title"},
+			"titleColor" : {"expr" : "line_graph_axis_title_color"}
+          }
+        },
+        "tooltip": [
+          {
+            "field": "time",
+            "type": "nominal",
+            "title": "Time"
+          },
+          {
+            "field": "line_graph_variable",
+            "type": "quantitative",
+            "title": "display name 1"
+          }
+        ]
+      }
+    }
+  ],
+  "resolve": {
+	// creates 2 independant Y axis for the two "marks" defined in "layer"
+    "scale": {"y": "independent"} 
+  }
+}
