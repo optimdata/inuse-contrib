@@ -39,7 +39,7 @@ To configure a visualization:
 | ![OEE2](OEE2.png) | ![bar&line](graph_and_bar.png) | ![Scatter plot](./scatter_plot.png) | 
 | [OEE Template 2](./OEE2_code.json) | [Bar and Line Graph with fold transform](./graph1_code.json) | [Scatter plot with a data request based on the time stamp](./scatter_plot.json) |
 | ![gauge1](gauge10.png) | ![fft1](fft1.png) | ![area_chart_with_points](area_chart_with_points.png) |
-| [Gauge with ElasticSearch Request](./gauge1.json) | [Spectral representation](./fft1.json) | [Area chart with points](./area_chart_with_points.json) |                              
+| [Gauge with ElasticSearch Request](./gauge1_with_elasticSearch_request.json) | [Spectral representation](./fft1.json) | [Area chart with points](./area_chart_with_points.json) |                              
 | ![average_production_calendar](average_production_calendar.png) | ![average_quality_metric](average_quality_metric.png) | ![bar_chart_with_trends_and_interactive_legend](bar_chart_with_trends_and_interactive_legend.png) | 
 | [Average production calendar](./average_production_calendar.json) | [Average quality metric (aggregation combination)](./average_quality_metric.json) | [Bar chart with trends and interactive legend](./bar_chart_with_trends_and_interactive_legend.json) |
 | ![default_duration_and_occurrence_pareto](default_duration_and_occurrence_pareto.png) | ![top_10_default_duration_pareto](top_10_default_duration_pareto.png) | ![top_10_default_occurence_pareto](top_10_default_occurence_pareto.png) | 
@@ -61,8 +61,8 @@ This error has to do with the Vega code. This means that there is a syntax error
 
 This can either have to do with an error in the data request or bad coding of the visualisation. To check if you are receiving data use the chrome tool as explain in 1. If it has to do with Vega, check all the field names for any typos and insure that nothing is missing.
    
-
-
+   
+   
 
 # Contributing
 
