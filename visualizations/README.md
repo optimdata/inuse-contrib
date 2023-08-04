@@ -33,7 +33,7 @@ To configure a visualization:
 |   |   |  |
 | :---: | :---: | :---: |
 | ![gauge1](gauge_1.png) | ![gauge2](gauge2.png) | ![gauge3](gauge3.png) | 
-| [Gauge Template 1](./gauge1_code.json) | [Gauge Template 2](./gauge2_code.json) | [Gauge Template 3](./gauge3_code.json) |
+| [Gauge Template 1](./gauge1_with_elasticSearch_request.json) | [Gauge Template 2](./gauge2_code.json) | [Gauge Template 3](./gauge3_code.json) |
 | ![gauge4](gauge4.png) | ![gauge5](gauge5.png) | ![OEE1](OEE1.png) | 
 | [Gauge Template 4](./gauge4_code.json) | [Gauge Template 5](./gauge5_code.json) | [OEE Template 1](./OEE1_code.json) |
 | ![OEE2](OEE2.png) | ![bar&line](graph_and_bar.png) | ![Scatter plot](./scatter_plot.png) | 
