@@ -1,0 +1,155 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+	
+	/* To custumize the vizualization simply change the value of the desired variable in the signals part of the code. This is the only part in which you need to do modifications. We tried to make the variable names as descriptive as possible.
+  For example this line :  {"name": "unit","value":" L"} represents the units. To change the units simply change the value like so : {"name": "unit","value":" mm"}
+  */
+	
+  /* 
+1. Choose the name of the associated model
+    - You have to replace 'model_name' by the index of your model
+	*/
+	
+	"title": {
+    "text": "Title",
+    "fontSize": 20,
+    "font": {"value": "verdana"}
+  },
+  "background": "white",
+	
+   "signals": [
+    {"name": "startAngle", "value": 0},
+    {"name": "endAngle", "update": "2*PI"},
+    {"name": "outerRadius", "update": "min(width/2, height/2)"},
+    {"name": "innerRadius", "update": "outerRadius*0.6"},
+    {"name": "cornerRadius", "value": 0},
+    {"name": "sort", "value": false}, // choose to sort the values in ascending order
+    {"name": "font_Size", "update": "outerRadius/7"}, // controls the legend font size
+  ],
+  
+  "data": {
+    "name": "source_0",
+    "url": {
+      "%context%": true,
+      "%timefield%": "ts_beg",
+      "%translate_data%": true,
+      "index": "model_name", // change model name here
+      "body": {
+        "aggs": {
+		  // add all the elastic search aggregations below and then add them to the fold transfom below
+          "f1": { // change variable name here
+            "sum": {
+              "field": "field_name" // add field name
+            }
+          },
+          "f2": { // change variable name here
+            "sum": {
+              "field": "field_name" // add field name
+            }
+          },
+          "f3": { // change variable name here
+            "sum": {
+              "field": "field_name" // add field name
+            }
+          },
+          "f4": { // change variable name here
+            "sum":  {
+              "field": "field_name" // add field name
+            }
+          }
+        },
+        "size": 0
+      }
+    },
+    "format": {
+      "property": "aggregations"
+    },
+    "transform": [
+      {
+        "type": "formula",
+        "expr": "datum.f1.value",
+        "as": "val1"
+      },
+      {
+        "type": "formula",
+        "expr": "datum.f2.value",
+        "as": "val2"
+      },
+      {
+        "type": "formula",
+        "expr": "datum.f3.value",
+        "as": "val3"
+      },
+      {
+        "type": "formula",
+        "expr": "datum.f4.value",
+        "as": "val4"
+      },
+	  {
+		"type" : "fold"
+		"fields" : [ // add the names of the variables associated with the aggregations here
+		  "val1",
+		  "val2",
+		  "val3",
+		  "val4"
+		],
+		"as" : [
+		  "id",
+		  "value"
+		]
+	  },
+      {
+        "type": "pie",
+        "field": "value",
+        "startAngle": {"signal": "startAngle"},
+        "endAngle": {"signal": "endAngle"},
+        "sort": {"signal": "sort"}
+      }
+    ]
+  },
+	
+  "scales": [
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "source_0", "field": "id"},
+      "range": {"scheme": "category20"}
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "arc",
+	  "name" : "arc"
+      "from": {"data": "source_0"},
+      "encode": {
+        "enter": {
+          "fill": {"scale": "color", "field": "id"},
+          "x": {"signal": "width / 2"},
+          "y": {"signal": "height / 2"}
+        },
+        "update": {
+          "startAngle": {"field": "startAngle"},
+          "endAngle": {"field": "endAngle"},
+          "innerRadius": {"signal": "innerRadius"},
+          "outerRadius": {"signal": "outerRadius"},
+          "cornerRadius": {"signal": "cornerRadius"}
+        }
+      }
+    }
+  ],
+  "legends": [
+  	{
+    	"fill": "color",
+    	"encode": {
+      	"labels": {
+        	"interactive": true,
+        	"update": {
+          	"fontSize": {"signal": "font_Size"},
+          	"fill": {"value": "black"}
+        	}
+      	}
+      }
+  	}
+  ]
+}
