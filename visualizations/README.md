@@ -61,8 +61,8 @@ This error has to do with the Vega code. This means that there is a syntax error
 
 This can either have to do with an error in the data request or bad coding of the visualisation. To check if you are receiving data use the chrome tool as explain in 1. If it has to do with Vega, check all the field names for any typos and insure that nothing is missing.
    
-
-
+   
+   
 
 # Contributing
 
